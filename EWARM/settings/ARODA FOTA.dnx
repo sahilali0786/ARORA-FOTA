@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<settings>
+    <Stack>
+        <FillEnabled>0</FillEnabled>
+        <OverflowWarningsEnabled>1</OverflowWarningsEnabled>
+        <WarningThreshold>90</WarningThreshold>
+        <SpWarningsEnabled>1</SpWarningsEnabled>
+        <WarnLogOnly>1</WarnLogOnly>
+        <UseTrigger>1</UseTrigger>
+        <TriggerName>main</TriggerName>
+        <LimitSize>0</LimitSize>
+        <ByteLimit>50</ByteLimit>
+    </Stack>
+    <PlDriver>
+        <FirstRun>0</FirstRun>
+        <MemConfigValue>C:\Program Files\IAR Systems\Embedded Workbench 9.2\arm\config\debugger\ST\STM32F091RC.ddf</MemConfigValue>
+    </PlDriver>
+    <StLinkDriver>
+        <stlinkserialNo>0D18170029135147324D4E00</stlinkserialNo>
+        <stlinkfoundProbes />
+        <stlinkResetStyle>0</stlinkResetStyle>
+        <stlinkResetStrategy>2</stlinkResetStrategy>
+        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
+        <CStepIntDis>_ 0</CStepIntDis>
+    </StLinkDriver>
+    <ArmDriver>
+        <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
+        <EnableCache>0</EnableCache>
+    </ArmDriver>
+    <Trace1>
+        <Enabled>0</Enabled>
+        <ShowSource>1</ShowSource>
+    </Trace1>
+    <Exceptions>
+        <StopOnUncaught>_ 0</StopOnUncaught>
+        <StopOnThrow>_ 0</StopOnThrow>
+    </Exceptions>
+    <DebugChecksum>
+        <Checksum>3275429525</Checksum>
+    </DebugChecksum>
+    <Disassembly>
+        <MixedMode>1</MixedMode>
+    </Disassembly>
+    <CallStack>
+        <ShowArgs>0</ShowArgs>
+    </CallStack>
+    <struct_types>
+        <Fmt0>GPRS_InitTypeDef-Signal_Strength	3	0</Fmt0>
+    </struct_types>
+    <watch_formats>
+        <Fmt0>{W}42:EC200_ONTime	3	0</Fmt0>
+        <Fmt1>{W}42:Get_CSQ	3	0</Fmt1>
+        <Fmt2>{W}42:Init_Time	3	0</Fmt2>
+    </watch_formats>
+    <Trace2>
+        <Enabled>0</Enabled>
+        <ShowSource>0</ShowSource>
+    </Trace2>
+    <TermIOLog>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+    </TermIOLog>
+    <DisassembleMode>
+        <mode>0</mode>
+    </DisassembleMode>
+    <Breakpoints2>
+        <Bp0>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\Core\Src\FOTA.c}.268.10" 0 0 1 "" 0 "" 0</Bp0>
+        <Count>1</Count>
+    </Breakpoints2>
+    <Aliases>
+        <Count>0</Count>
+        <SuppressDialog>0</SuppressDialog>
+    </Aliases>
+</settings>
