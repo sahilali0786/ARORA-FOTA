@@ -77,11 +77,7 @@ extern "C" {
 
 /*----- FLASH PROGRAMMING FOR WRITTING CONFIG TABLE --------------------------*/
 #define ApplicationAddress      ((uint32_t)0x08008000)
-  
-  
-  
-#define EndAddr                 ((uint32_t)0x08040000)                               // MICRO FLASH LAST ADDRESS BUT ONE PAGE 
-//#define FLASH_PAGE_SIZE         ((uint16_t)0x800)                                    // MICRO FLASH PAGE SIZE
+#define EndAddr                 ((uint32_t)0x080003FF)  //((uint32_t)0x08040000)                               // MICRO FLASH LAST ADDRESS BUT ONE PAGE 
 
 /*----- SECONDARY SPI FLASH WRITTING DATA TABLE ------------------------------*/
 #define SPIFLASH_FOTA           0xF00000                                        // FOR STORING ONLY PROGRAM DATA
@@ -90,7 +86,6 @@ extern "C" {
 //#define FOTA_PKT                8192                                            // FOTA Packet Download size
 
 /* USER CODE END EC */
-
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 
@@ -107,52 +102,6 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
-
-/* USER CODE BEGIN EFP */
-#define IS_AF(c)  ((c >= 'A') && (c <= 'F'))
-#define IS_af(c)  ((c >= 'a') && (c <= 'f'))
-#define IS_09(c)  ((c >= '0') && (c <= '9'))
-#define ISVALIDHEX(c)  IS_AF(c) || IS_af(c) || IS_09(c)
-
-#define CONVERTHEX_alpha(c)  (IS_AF(c) ? (c - 'A'+10) : (c - 'a'+10))
-#define CONVERTHEX(c)   (IS_09(c) ? (c - '0') : CONVERTHEX_alpha(c))
-/* USER CODE END Private defines */
-/* USER CODE END EM */
-
-/* Exported functions prototypes ---------------------------------------------*/
-void Error_Handler(void);
-
-/* USER CODE BEGIN EFP */
-#define IS_AF(c)  ((c >= 'A') && (c <= 'F'))
-#define IS_af(c)  ((c >= 'a') && (c <= 'f'))
-#define IS_09(c)  ((c >= '0') && (c <= '9'))
-#define ISVALIDHEX(c)  IS_AF(c) || IS_af(c) || IS_09(c)
-
-#define CONVERTHEX_alpha(c)  (IS_AF(c) ? (c - 'A'+10) : (c - 'a'+10))
-#define CONVERTHEX(c)   (IS_09(c) ? (c - '0') : CONVERTHEX_alpha(c))
-/* USER CODE END Private defines */
-/* USER CODE END EM */
-
-/* Exported functions prototypes ---------------------------------------------*/
-void Error_Handler(void);
-
-/* USER CODE BEGIN EFP */
-#define IS_AF(c)  ((c >= 'A') && (c <= 'F'))
-#define IS_af(c)  ((c >= 'a') && (c <= 'f'))
-#define IS_09(c)  ((c >= '0') && (c <= '9'))
-#define ISVALIDHEX(c)  IS_AF(c) || IS_af(c) || IS_09(c)
-
-#define CONVERTHEX_alpha(c)  (IS_AF(c) ? (c - 'A'+10) : (c - 'a'+10))
-#define CONVERTHEX(c)   (IS_09(c) ? (c - '0') : CONVERTHEX_alpha(c))
-/* USER CODE END Private defines */
-/* USER CODE END EM */
-
-/* Exported functions prototypes ---------------------------------------------*/
-void Error_Handler(void);
-
-/* USER CODE BEGIN EFP */
-
-/* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
 #define SPI_CS_Pin                    LL_GPIO_PIN_15
@@ -194,7 +143,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 #define CS_PIN_RESET       GPIOA -> BRR  = LL_GPIO_PIN_15
-#define CS_PIN_SET       GPIOA   -> BSRR = LL_GPIO_PIN_15
+#define CS_PIN_SET         GPIOA -> BSRR = LL_GPIO_PIN_15
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

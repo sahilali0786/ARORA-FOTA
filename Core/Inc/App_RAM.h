@@ -46,7 +46,7 @@ Rev_Count,                                                                      
 //Loc,                                                                            // SAVE LAST LOCATION OF RECEIVE COUNT AT THE END OF RECEIVING FTP FILE 
 Sec_Tick,                                                                       // TICK @ 1 MILI SECOND 
 GP_Counter;                                                                     // GENERAL PURPOSE COUNTER 
-
+extern uint16_t Connect_Length;
 extern long
 //StartAddress,                                                                   // START ADDRESS FLASH DATA
 SPIFlashAddress;                                                                // SPI FLASH ADDRESS

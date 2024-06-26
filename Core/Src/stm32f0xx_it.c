@@ -192,8 +192,10 @@ void USART1_IRQHandler(void)
        Data_WaitTime = 30;
        Rev_Buffer[Rev_Count] = RcvIn;
        Rev_Count ++;
-       if((Rev_Count % FOTA_PKT)==0)Flag_WriteFile = SET;
-     
+       if((Rev_Count % FOTA_PKT)==0)
+       {
+         Flag_WriteFile = SET;
+       }
     }
         
         //        Rev_Buffer[Rev_Count] = RcvIn;   TBD

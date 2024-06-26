@@ -267,7 +267,7 @@ void SPI_FLASH_SectorErase(unsigned long SectorAddr )
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SPI_FLASH_BufferRead(char* pBuffer, unsigned long ReadAddr, unsigned short NumByteToRead)
+void SPI_FLASH_BufferRead(char* pBuffer, uint32_t ReadAddr, uint16_t NumByteToRead)
 {
   /* Select the FLASH: Chip Select low */
    /* Select the FLASH: Chip Select low */
@@ -383,4 +383,30 @@ void SPI_FLASH_BufferWrite(char* pBuffer, uint32_t WriteAddr, uint16_t NumByteTo
   }
   
   CS_PIN_SET;
+}
+
+
+/*******************************************************************************
+* Function Name  : SPI_FLASH_BulkErase
+* Description    : Erases the entire FLASH.
+* Input          : None
+* Output         : None
+* Return         : None
+*******************************************************************************/
+void SPI_FLASH_BulkErase(void)
+{
+  /* Send write enable instruction */
+  enable_write();
+
+  /* Bulk Erase */
+  /* Select the FLASH: Chip Select low */
+   CS_PIN_RESET;
+   
+  /* Send Bulk Erase instruction  */
+  SPI_FLASH_SendByte(CE);
+  /* Deselect the FLASH: Chip Select high */
+   CS_PIN_SET;
+
+  /* Wait the end of Flash writing */
+  SPI_FLASH_WaitForWriteEnd();
 }

@@ -3,6 +3,12 @@
     <Tool>
         <Name>linker</Name>
         <Parent>
+            <Path>D:\CODE\COMPANIES\ARODA FOTA\RODA_TRACK FOTA\New folder\EWARM\ARODA FOTA\Exe\ARODA FOTA.out</Path>
+            <Output>
+                <Path>D:\CODE\COMPANIES\ARODA FOTA\RODA_TRACK FOTA\New folder\EWARM\ARODA FOTA\List\ARODA FOTA.map</Path>
+            </Output>
+        </Parent>
+        <Parent>
             <Path>D:\CODE\COMPANIES\ARODA FOTA\RODA_TRACK FOTA\EWARM\ARODA FOTA\Exe\ARODA FOTA.out</Path>
             <Output>
                 <Path>D:\CODE\COMPANIES\ARODA FOTA\RODA_TRACK FOTA\EWARM\ARODA FOTA\List\ARODA FOTA.map</Path>
@@ -18,12 +24,6 @@
             <Path>C:\Users\SAHILALI\OneDrive - Office 365\Desktop\STM32\ARODA FOTA\EWARM\ARODA FOTA\Exe\ARODA FOTA.out</Path>
             <Output>
                 <Path>C:\Users\SAHILALI\OneDrive - Office 365\Desktop\STM32\ARODA FOTA\EWARM\ARODA FOTA\List\ARODA FOTA.map</Path>
-            </Output>
-        </Parent>
-        <Parent>
-            <Path>D:\CODE\COMPANIES\ARODA FOTA\RODA_TRACK FOTA\New folder\EWARM\ARODA FOTA\Exe\ARODA FOTA.out</Path>
-            <Output>
-                <Path>D:\CODE\COMPANIES\ARODA FOTA\RODA_TRACK FOTA\New folder\EWARM\ARODA FOTA\List\ARODA FOTA.map</Path>
             </Output>
         </Parent>
         <Parent>

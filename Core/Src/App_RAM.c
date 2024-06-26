@@ -46,7 +46,7 @@ long
 //StartAddress,                                                                   // START ADDRESS FLASH DATA
 SPIFlashAddress;                                                                // SPI FLASH ADDRESS
 //FlashAddress;                                                                   // FLASH PAGE ADDRESS
-
+uint16_t Connect_Length = 0;
 uint32_t JumpAddress;                                                           // JUMP TO VTS PROGRAM
 uint16_t Config_Counter = 0;
 

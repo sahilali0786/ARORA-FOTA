@@ -52,18 +52,23 @@ extern SPI_HandleTypeDef hspi1;
 
  
 
-unsigned char SPI_FLASH_SendByte(uint8_t byte);
+
 uint32_t W25Q_ReadID(void);
 unsigned long SPI_FLASH_ReadID(void);
+unsigned char SPI_FLASH_SendByte(uint8_t byte);
+unsigned char SPI_FLASH_ReadByte(void);
+
 void SPI_FLASH_BufferWrite(char* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite);
 void SPI_FLASH_WaitForWriteEnd(void);
-unsigned char SPI_FLASH_ReadByte(void);
 void SPI_FLASH_PageWrite(char* pBuffer, unsigned long WriteAddr, unsigned short NumByteToWrite);
 void SPI_FLASH_SectorErase(unsigned long SectorAddr );
-void SPI_FLASH_BufferRead(char* pBuffer, unsigned long ReadAddr, unsigned short NumByteToRead);
+void SPI_FLASH_BufferRead(char* pBuffer, uint32_t ReadAddr, uint16_t NumByteToRead);
 void    FLASH_PageErase(uint32_t PageAddress);
 void   FLASH_Program_HalfWord(uint32_t Address, uint16_t Data);
+void SPI_FLASH_BulkErase(void);
+
 HAL_StatusTypeDef FLASH_OB_RDP_LevelConfig(uint8_t ReadProtectLevel);
-  HAL_StatusTypeDef FLASH_OB_EnableWRP(uint32_t WriteProtectPage);
+HAL_StatusTypeDef FLASH_OB_EnableWRP(uint32_t WriteProtectPage);
+
 
 #endif

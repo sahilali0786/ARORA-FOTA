@@ -14,7 +14,7 @@ IAP_Counter  = LL_RTC_BAK_GetRegister(RTC,LL_RTC_BKP_DR4) >> 8;                 
     
     sprintf(DFU_HTTP.IP,"35.154.23.247");
     sprintf(DFU_HTTP.PATH,"EFOTA");
-    sprintf(DFU_HTTP.FILENAME,"MMI-1.0.0");
+    sprintf(DFU_HTTP.FILENAME,"MMI-1.0.2");
     sprintf(DFU_HTTP.URL,"http://%s/%s/%s.bin",DFU_HTTP.IP ,&DFU_HTTP.PATH[0],&DFU_HTTP.FILENAME[0]);
       
   //}

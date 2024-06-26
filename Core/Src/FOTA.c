@@ -129,10 +129,10 @@ void Get_Firmware(void)
 {
   char* PTR;
    char *Ptr;
-  /*----- CHECK SIGNALS & NETWORK --------------------------------------------*/
+  /*----- CHECK SIGNALS & NETWORK -----------------(for testing i commented)------------------*/
   Check_Signal_Nw_GPRS();                                                       // CHECK SIGNAL STRENGTH NETWORK REGISTRATION GPRS ATTACHMENT 
   Get_CSQ++;
-  if(Get_CSQ > 99)SYSTEM_SW_RESET;
+  if(Get_CSQ > 50)SYSTEM_SW_RESET;
   if(Flag_ValidNetwork == SET && Flag_APNSet == RESET){Get_CSQ = 0; Set_APN();}               // IF NETWORK VALID SET APN
   
   if(Flag_APNSet)
@@ -143,7 +143,7 @@ void Get_Firmware(void)
       if(DFU_HTTP.URL[0] != 'h')
         sprintf(DFU_HTTP.URL,"http://%s/%s/%s.bin",DFU_HTTP.IP ,&DFU_HTTP.PATH[0],&DFU_HTTP.FILENAME[0]);
     
-      sprintf(buff,"%d,20",strlen(DFU_HTTP.URL));
+      sprintf(buff,"%d,10",strlen(DFU_HTTP.URL));
       Serial_PutString_GPRS(buff);                                              // URL address data length
       Serial_SendData_GPRS(13); Serial_SendData_GPRS(10);                                                 // Address upload time
       WAIT_MODEM_CONNECT();        
@@ -156,6 +156,7 @@ void Get_Firmware(void)
       
       // Get Request
       /*        3827 :-   wait http response timeout*/
+      
       Modem_PutString("AT+QHTTPGET=80");
 
      Wait = 125 ;
@@ -176,8 +177,6 @@ void Get_Firmware(void)
         }
       
       }
-
-      
       // Read in File
       Modem_PutString("AT+QHTTPDL=\"FOTA.txt\",1024");WAIT_MODEM_RESP(2);
       Wait = 80;
@@ -203,12 +202,12 @@ void Get_Firmware(void)
       }
       
        // Open File
-      FileLength = 9313;  // for testing TBD
-      int FileHandel = 0;Wait = 80;
+      FileLength = 98365; //296535 // for testing TBD
+      int FileHandel = 0;Wait = 80; /*4016 access denied*/
       Modem_PutString("AT+QFOPEN=\"FOTA.txt\",2");WAIT_MODEM_RESP(2); // Open in Readonly mode
       while(Wait)
       {
-        mSec_Delay(100);
+        
         if(Flag_Second){Flag_Second = RESET;/*IWDG_ReloadCounter();*/ Wait--;}
         if(Wait == 1){ Flag_APNSet = RESET; } // try again
         if(Ptr = strstr(GPRS_Buffer,"OPEN: "))
@@ -225,6 +224,7 @@ void Get_Firmware(void)
       Flag_Download = SET;
       while(FileLength)
       {
+        mSec_Delay(1000);
         sprintf(buff,"AT+QFSEEK=%d,%d,0",FileHandel,FileLoc);
         Modem_PutString(buff);WAIT_MODEM_RESP(2); // Open in Readonly mode
         
@@ -240,25 +240,28 @@ void Get_Firmware(void)
         } 
         
         /*Flag_GetFile_Serial = RESET;*/ //TBD
-        Flag_WriteFile = RESET;
-        
+        Flag_WriteFile = RESET;       
         Data_WaitTime = 30; 
         Flag_GetFile = SET;
+        
         while(Data_WaitTime > 0)
         {
           if(Flag_Second){Flag_Second = RESET; Data_WaitTime--;}
           if(Flag_WriteFile || strstr(Rev_Buffer,":00000001FF"))
           {
-            
             mSec_Delay(50);
             PTR = strstr(&Rev_Buffer[0],"CONNECT");
+            if(strstr(PTR,"CONNECT"))
+            {
+              PTR +=strlen("CONNECT ");
+              Connect_Length = atoi(PTR);
+              
+            }
             PTR = strstr(PTR,"\r\n") + 2;
-            
             Flag_WriteFile = RESET;
-            
             SPI_FLASH_SectorErase(FlashAddress);
             SPI_FLASH_SectorErase(FlashAddress + 4096);
-            SPI_FLASH_BufferWrite(PTR,FlashAddress,8192);
+            SPI_FLASH_BufferWrite(PTR,FlashAddress,8192);// flash address 0xfb'0000
             Rev_Count = 0;
             if(FileLength < 8192 && strstr(Rev_Buffer,":00000001FF"))
             {
@@ -471,17 +474,24 @@ void StoreSPI_Flash(void)
   SPIFlashAddress = SPIFLASH_DATA;
   FlashAddress  = SPIFLASH_FOTA;
   
+  /*clearing 64 sectors . each sector size is 4kb */
   for(GP_Counter = 0; GP_Counter < 64 ; GP_Counter++,FlashAddress +=4096){SPI_FLASH_SectorErase(FlashAddress); mSec_Delay(10);} // 256 KB
  
   
-  
+  /*making current address 0x00 and last address 0xffff*/
   Current_Add = 0x0000;
   Last_Add    = 0xFFFF;
 NEXT:  
   while(Flag_Prog)
   {
-  memset(GPRS_SendBuffer,0,100);
-  SPI_FLASH_BufferRead(Byt_Count,SPIFlashAddress,4);
+    mSec_Delay(10);
+    /*clear the buffer to store the from SPI flash memory */
+    memset(GPRS_SendBuffer,0,100);
+    
+    /*reading byte count from each line of the download */
+    SPI_FLASH_BufferRead(Byt_Count,SPIFlashAddress,4);
+    
+  
   if(StrPtr = strstr(Byt_Count,":"))StrPtr +=1;
   No_OfBytes = CONVERTHEX(*StrPtr) *16 + CONVERTHEX(*(StrPtr+1));
   SPI_FLASH_BufferRead(GPRS_SendBuffer,SPIFlashAddress,(13+ 2*No_OfBytes));
@@ -649,7 +659,7 @@ void Program_Flash(void)
 //  volatile status FLASHStatus;
   unsigned short FlashData;
   short Prog_Loc;
-  char Prog_Data[2048];
+  char Prog_Data[4096];  // 2048
   
   /* Unlock the Flash Program Erase controller */
   HAL_FLASH_Unlock();								// UNLOCK FLASH
@@ -666,7 +676,7 @@ void Program_Flash(void)
   
   for(GP_Counter = 0;GP_Counter < (EndAddr-ApplicationAddress-(FLASH_PAGE_SIZE*2))/FLASH_PAGE_SIZE; GP_Counter++)                            // UPTO CONFIGURATION LOCATION 
    {
-      SPI_FLASH_BufferRead((char*)Prog_Data,SPIFlashAddress,FLASH_PAGE_SIZE);
+      SPI_FLASH_BufferRead((char*)Prog_Data,(uint32_t)SPIFlashAddress,(uint16_t)FLASH_PAGE_SIZE);
       for(Prog_Loc = 0; Prog_Loc < FLASH_PAGE_SIZE; Prog_Loc++)
        {
         FlashData =   (Prog_Data[Prog_Loc+1]<<8) | Prog_Data[Prog_Loc];		// GET RAM DATA           
