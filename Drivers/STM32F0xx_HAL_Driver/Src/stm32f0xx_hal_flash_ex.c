@@ -96,9 +96,9 @@ static void              FLASH_MassErase(void);
 void    FLASH_PageErase(uint32_t PageAddress);
 
 /* Option bytes control */
-static HAL_StatusTypeDef FLASH_OB_EnableWRP(uint32_t WriteProtectPage);
+  HAL_StatusTypeDef FLASH_OB_EnableWRP(uint32_t WriteProtectPage);
 static HAL_StatusTypeDef FLASH_OB_DisableWRP(uint32_t WriteProtectPage);
-static HAL_StatusTypeDef FLASH_OB_RDP_LevelConfig(uint8_t ReadProtectLevel);
+  HAL_StatusTypeDef FLASH_OB_RDP_LevelConfig(uint8_t ReadProtectLevel);
 static HAL_StatusTypeDef FLASH_OB_UserConfig(uint8_t UserConfig);
 static HAL_StatusTypeDef FLASH_OB_ProgramData(uint32_t Address, uint8_t Data);
 static uint32_t          FLASH_OB_GetWRP(void);
@@ -516,7 +516,7 @@ static void FLASH_MassErase(void)
   *         The value of this parameter depend on device used within the same series 
   * @retval HAL status 
   */
-static HAL_StatusTypeDef FLASH_OB_EnableWRP(uint32_t WriteProtectPage)
+  HAL_StatusTypeDef FLASH_OB_EnableWRP(uint32_t WriteProtectPage)
 {
   HAL_StatusTypeDef status = HAL_OK;
   uint16_t WRP0_Data = 0xFFFFU;
@@ -746,7 +746,7 @@ static HAL_StatusTypeDef FLASH_OB_DisableWRP(uint32_t WriteProtectPage)
   * @note   Warning: When enabling OB_RDP level 2 it's no more possible to go back to level 1 or 0
   * @retval HAL status
   */
-static HAL_StatusTypeDef FLASH_OB_RDP_LevelConfig(uint8_t ReadProtectLevel)
+  HAL_StatusTypeDef FLASH_OB_RDP_LevelConfig(uint8_t ReadProtectLevel)
 {
   HAL_StatusTypeDef status = HAL_OK;
   

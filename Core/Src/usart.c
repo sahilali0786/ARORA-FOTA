@@ -79,7 +79,6 @@ void MX_USART1_UART_Init(void)
   LL_USART_DisableIT_CTS(USART1);
   LL_USART_ConfigAsyncMode(USART1);
   LL_USART_Enable(USART1);
-  
   /* USER CODE BEGIN USART1_Init 2 */
 LL_USART_EnableIT_RXNE(USART1);
   /* USER CODE END USART1_Init 2 */

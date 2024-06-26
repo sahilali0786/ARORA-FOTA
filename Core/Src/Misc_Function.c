@@ -37,7 +37,7 @@ IAP_Counter  = LL_RTC_BAK_GetRegister(RTC,LL_RTC_BKP_DR4) >> 8;                 
   {
     goto APP_FW;
   }
-  if((IAP_Status == 'I') || (IAP_Status == 'S'))/*Flag_FlashProg = SET;*/
+  if((IAP_Status == 'I') || (IAP_Status == 'S'))Flag_FlashProg = SET;
   
   if(IAP_Status == 'S')
   {
@@ -147,6 +147,9 @@ IAP_Counter  = LL_RTC_BAK_GetRegister(RTC,LL_RTC_BKP_DR4) >> 8;                 
 void GP_timer(void)
 {
   //  Get_RTC_Time();
+  
+  Flag_Second = RESET;
+  
   /* Inital Turn On Delay for Modem*/
   
   if(EC200_ONTime)EC200_ONTime--; //tbd

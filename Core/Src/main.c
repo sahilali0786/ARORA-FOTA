@@ -19,12 +19,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "rtc.h"
+#include "spi.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+ 
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -89,27 +90,29 @@ int main(void)
   MX_GPIO_Init();
   MX_RTC_Init();
   MX_USART1_UART_Init();
-  App_Init();
+  MX_SPI1_Init();
+ // MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-
+  App_Init();
   /* USER CODE END 2 */
-
+ 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-   if(Flag_Second)
+      if(Sec_Tick % 100 == 0 )
    {
-     Flag_Second = RESET;
+      
        switch(VTS_State)                                                         // DO ACT AS PER VEHICLE STATUS
       {
       case MODEM_INIT : 
-                        GP_timer();
+                        if(Flag_Second)GP_timer();
                         
                         if(Flag_ModemRdy == SET)
                         {
                           /*none blocking mode Sir code is in blocking mode*/
                             INIT_GPRS_Modem(); 
+//                             Send_SMS(FAIL); // for testing 
                         };
           break;
       case NORMAL     :  
@@ -152,123 +155,15 @@ int main(void)
             break;
     };
     
-   }
     
-//    if(Flag_Second == SET)             
-//    {
-//      Flag_Second = RESET;
-// 
-//      switch(VTS_State)                                                         // DO ACT AS PER VEHICLE STATUS
-//      {
-//        
-//      case MODEM_INIT : if(Init_Time)Init_Time--;                               // Modem Initialization Time
-//                        else 
-//                        {
-//                           LL_RTC_BAK_SetRegister(RTC,LL_RTC_BKP_DR4,0);
-//                          SYSTEM_SW_RESET;
-//                        }
-//                        if(Init_Time == 20)GPRS_ON;
-//                        else if(Init_Time < 20)
-//                        {
-//                          if(Init_Time == 1)Flag_ModemRdy = SET;                  // if modem does not gives call ready
-//                          if(Flag_NoResp == SET) Modem_PutString("AT");           // Sent AT for Autobauding 
-//                          if(Flag_ModemRdy == SET)
-//                          {
-//                            Init_Time = 0;mSec_Delay(100);INIT_GPRS_Modem();     //if call ready 
-//                            VTS_State = NORMAL; 
-//                            if(Flag_SPIFail == SET)
-//                            {
-//                             Send_SMS(SPI_FAIL);
-//                             LL_RTC_BAK_SetRegister(RTC,LL_RTC_BKP_DR4,0);
-//                             SYSTEM_SW_RESET;
-//                            };
-//                          };
-//                        }
-//                        break;
-//                        
-//      case NORMAL     :   if(IAP_Counter >= 10){Send_SMS(FAIL);  SYSTEM_SW_RESET;  }
-//                          else if(Flag_WrongFile){Send_SMS(WRONG_FILE);LL_RTC_BAK_SetRegister(RTC,LL_RTC_BKP_DR4,0);SYSTEM_SW_RESET;}
-//                          else if(NoData_Count > 3){Send_SMS(UNABLE_TO_DWLOAD);LL_RTC_BAK_SetRegister(RTC,LL_RTC_BKP_DR4,0);SYSTEM_SW_RESET;}
-////                          else if(Modem_NoResp >= 8)INIT_APP();
-//                          else if(Flag_FlashProg)
-//                          {
-//                            IAP_Counter +=1;
-//                            Get_Firmware();
-//                          }
-//                         break;
-//                         
-//                         
-////      case SERIAL      :  if(IAP_Counter >= 10)
-////                          {
-////                            if(IAP_Status == 'S')
-////                            {
-////                              Serial_PutString_232("FAIL",3);
-////                            }
-////                            else 
-////                            {
-////                            Send_SMS(FAIL);
-////                            }
-////                            RTC_WriteBackupRegister(RTC_BKP_DR4,0);
-////                            SYSTEM_SW_RESET;
-////                          }
-////                        
-////                          GPRS_ON;   
-////                          if(Flag_FlashProg)
-////                          {
-////                            IAP_Counter +=1;
-////                            Get_Firmware_Serial();
-////                            
-////                          }
-////                          else if(Flag_SaveFlash)
-////                          {
-////                            IAP_Counter +=1;
-////                            StoreSPI_Flash();
-////                          }
-////                          else if(Flag_LoadProg)
-////                          {
-////                            IAP_Counter +=1;
-////                            Program_Flash();
-////                          } 
-////                      else Flag_FW_Start = RESET;
-////                         break;
-////       default :   if(Flag_FWFail == RESET)
-////                   {
-////                       if(IAP_Counter >= 10)
-////                        {
-////                          if(IAP_Status == 'S')
-////                          {
-////                           /* Serial_PutString_232("FAIL",3);*/
-////                          }
-////                          else 
-////                          {
-////                            Send_SMS(FAIL);
-////                          }
-////                         LL_RTC_BAK_SetRegister(RTC,LL_RTC_BKP_DR4,0);
-////                          SYSTEM_SW_RESET;
-////                        }
-////                       IAP_Counter++; 
-////                   }
-////                   else 
-////                   {
-////                     if(Flag_LogIn == RESET)
-////                     {
-////                       respond_time++;
-////                       if(respond_time > 4)
-////                       {
-////                         respond_time = 0;
-////                         Serial_PutString_232("Please Flash The Device",3);
-////                         SYSTEM_SW_RESET;
-////                       }
-////                     }
-////                     Flag_FlashProg = SET;
-////                   }
-////                   
-////                    break;
-//        
-//      };// End of switch statement
-//      
-//    };// End of Second Flag
-//    
+    
+    
+    
+    
+   }
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }

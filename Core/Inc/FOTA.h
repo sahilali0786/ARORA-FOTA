@@ -17,7 +17,7 @@
 #define RECLEN    0x02
 #define MAXRECLEN 0xFF              // Maximumm value of Reclen field used in IntelHex
 
-#define FOTA_PKT               2000 //11000 // FOTA Packet Download size
+#define FOTA_PKT               8192 //11000 // FOTA Packet Download size
 #define FLASH_EMPTY_VALUE      0xFFFFFFFF
 
 #define GOLDEN_IMG_ADDR              (uint32_t)(0x08008800)
@@ -106,6 +106,8 @@ void Get_Firmware(void);
 void HAL_FLASH_Write_Buff(uint32_t FlashAddress, char *Data, uint32_t DataSize);
 void HAL_FLASH_READ(char *Buff, uint32_t Addr, int Buff_Lnt);
 void JumpToAppAddr(uint32_t AppStart_Address);
+void StoreSPI_Flash(void);
+void Program_Flash(void);
  
 #endif
 /******************* (C) COPYRIGHT 2024 EDS INDIA ********* END OF FILE ************/

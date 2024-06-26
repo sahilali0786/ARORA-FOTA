@@ -35,6 +35,8 @@ D:\CODE\COMPANIES\ARODA\ FOTA\RODA_TRACK\ FOTA\EWARM\ARODA\ FOTA\BrowseInfo\Core
   D:\CODE\COMPANIES\ARODA\ FOTA\RODA_TRACK\ FOTA\EWARM\..\Drivers\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_i2c_ex.h \
   D:\CODE\COMPANIES\ARODA\ FOTA\RODA_TRACK\ FOTA\EWARM\..\Drivers\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_pwr.h \
   D:\CODE\COMPANIES\ARODA\ FOTA\RODA_TRACK\ FOTA\EWARM\..\Drivers\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_pwr_ex.h \
+  D:\CODE\COMPANIES\ARODA\ FOTA\RODA_TRACK\ FOTA\EWARM\..\Drivers\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_spi.h \
+  D:\CODE\COMPANIES\ARODA\ FOTA\RODA_TRACK\ FOTA\EWARM\..\Drivers\STM32F0xx_HAL_Driver\Inc\stm32f0xx_hal_spi_ex.h \
   D:\CODE\COMPANIES\ARODA\ FOTA\RODA_TRACK\ FOTA\EWARM\..\Drivers\STM32F0xx_HAL_Driver\Inc\stm32f0xx_ll_rtc.h \
   D:\CODE\COMPANIES\ARODA\ FOTA\RODA_TRACK\ FOTA\EWARM\..\Drivers\STM32F0xx_HAL_Driver\Inc\stm32f0xx_ll_usart.h \
   D:\CODE\COMPANIES\ARODA\ FOTA\RODA_TRACK\ FOTA\EWARM\..\Drivers\STM32F0xx_HAL_Driver\Inc\stm32f0xx_ll_rcc.h \
@@ -56,4 +58,6 @@ D:\CODE\COMPANIES\ARODA\ FOTA\RODA_TRACK\ FOTA\EWARM\ARODA\ FOTA\BrowseInfo\Core
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.2\arm\inc\c\stdlib.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.2\arm\inc\c\DLib_Product_stdlib.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.2\arm\inc\c\ctype.h \
-  D:\CODE\COMPANIES\ARODA\ FOTA\RODA_TRACK\ FOTA\EWARM\..\Core\Inc\SMS.h
+  D:\CODE\COMPANIES\ARODA\ FOTA\RODA_TRACK\ FOTA\EWARM\..\Core\Inc\SMS.h \
+  D:\CODE\COMPANIES\ARODA\ FOTA\RODA_TRACK\ FOTA\EWARM\..\Core\Inc\SPI_FLASH.h \
+  D:\CODE\COMPANIES\ARODA\ FOTA\RODA_TRACK\ FOTA\EWARM\..\Core\Inc\main.h

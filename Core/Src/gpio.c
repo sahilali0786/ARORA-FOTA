@@ -46,22 +46,37 @@ void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOF);
-  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
-  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOC);
-  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOD);
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOC);
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOD);
+
+ 
+
 
   /**/
-  LL_GPIO_ResetOutputPin(GPRS_LED_GPIO_Port, GPRS_LED_Pin);
+  GPIO_InitStruct.Pin = SPI_CS_Pin;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  LL_GPIO_Init(SPI_CS_GPIO_Port, &GPIO_InitStruct);
 
   /**/
-  LL_GPIO_ResetOutputPin(GPS_LED_GPIO_Port, GPS_LED_Pin);
+  GPIO_InitStruct.Pin = SPI2_INT2_Pin;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  LL_GPIO_Init(SPI2_INT2_GPIO_Port, &GPIO_InitStruct);
 
   /**/
-  LL_GPIO_ResetOutputPin(STATUS_LED_GPIO_Port, STATUS_LED_Pin);
-
-  /**/
-  LL_GPIO_ResetOutputPin(GPRS_GPIO_Port, GPRS_Pin);
+  GPIO_InitStruct.Pin = SPI2_INT1_Pin;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  LL_GPIO_Init(SPI2_INT1_GPIO_Port, &GPIO_InitStruct);
 
   /**/
   GPIO_InitStruct.Pin = GPRS_LED_Pin;
@@ -95,6 +110,9 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPRS_GPIO_Port, &GPIO_InitStruct);
 
+  LL_GPIO_SetOutputPin(GPRS_LED_GPIO_Port,GPRS_LED_Pin);
+LL_GPIO_SetOutputPin(GPS_LED_GPIO_Port,GPS_LED_Pin);
+LL_GPIO_SetOutputPin(STATUS_LED_GPIO_Port,STATUS_LED_Pin);
 }
 
 /* USER CODE BEGIN 2 */

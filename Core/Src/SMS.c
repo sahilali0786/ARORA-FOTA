@@ -36,7 +36,7 @@ void Send_SMS(unsigned char Subject)
   
  char Temp_Buff[50];
  
- if(DFU_HTTP.DFU_Mob[0] == 0x00)sprintf(DFU_HTTP.DFU_Mob, "6306753746");
+ if(DFU_HTTP.DFU_Mob[0] == 0x00)sprintf(DFU_HTTP.DFU_Mob, "8287136204");
     
  if((DFU_HTTP.DFU_Mob[0] > '3') && (DFU_HTTP.DFU_Mob[0] <= '9'))
  {

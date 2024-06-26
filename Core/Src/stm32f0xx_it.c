@@ -84,7 +84,7 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-
+Modem_PutString("STUCK IN HARD FAULT");
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {
@@ -121,10 +121,10 @@ void PendSV_Handler(void)
 
 /**
   * @brief This function handles System tick timer.
-*/
+  */
 void SysTick_Handler(void)
 {
-  
+ 
   Flag_mSec = SET;                                                                // SET MILI SECOND FLAG
   if(Flag_FWFail == SET)
   {
@@ -147,6 +147,7 @@ void SysTick_Handler(void)
   if(Sec_Tick)Sec_Tick--; 
   else 
   {
+    if(Flag_ValidNetwork){GPRS_LED_ON;}
     Sec_Tick = 999;
     Flag_Second = SET;
   };
@@ -185,60 +186,70 @@ void USART1_IRQHandler(void)
       if(Flag_GetFile) 
       {
         Data_WaitTime = 60;
-        Rev_Buffer[Rev_Count] = RcvIn;
-        Rev_Count ++;
+
+        if(Flag_GetFile == SET) 
+    {
+       Data_WaitTime = 30;
+       Rev_Buffer[Rev_Count] = RcvIn;
+       Rev_Count ++;
+       if((Rev_Count % FOTA_PKT)==0)Flag_WriteFile = SET;
+     
+    }
         
-        /* this line is missing from here 
-        if((Rev_Count % FOTA_PKT)==0)Flag_WriteFile = SET;
-        */
-        
-        /*-------------TBD---------------*/
-        if (FileLength > FOTA_PKT)
-        {
-          if(Flag_NextEndOfSector)
-          {
-            if(Rev_Count % (FOTA_PKT+59) == 0)
-            {
-              Flag_NextEndOfSector = RESET;
-              Flag_WriteFile = SET;  // Set Flag_WriteFile to SET
-              Rev_Count = 0;         // Reset Rev_Count
-            }
-          }
-          else if ((!Flag_NextEndOfSector) &&(FileLoc < FOTA_PKT) && (!Flag_EndofSector))
-          {
-            if (Rev_Count % (FOTA_PKT+57) == 0)  //
-            {   
-              Flag_EndofSector = RESET;
-              Flag_WriteFile = SET;  // Set Flag_WriteFile to SET
-              Rev_Count = 0;         // Reset Rev_Count
-            }
-          }
-          else if (!Flag_NextEndOfSector && Flag_EndofSector)
-          {
-            if (Rev_Count % (FOTA_PKT+87) == 0)  //
-            {   
-              Flag_EndofSector = RESET;
-              Flag_WriteFile = SET;  // Set Flag_WriteFile to SET
-              Rev_Count = 0;         // Reset Rev_Count
-            }
-          }
-          else
-          {
-            if (Rev_Count % (FOTA_PKT+42) == 0) //
-            {
-              Flag_WriteFile = SET;  // Set Flag_WriteFile to SET
-              Rev_Count = 0;         // Reset Rev_Count
-            }
-          }
-        } 
-        else
-        {
-          if (Rev_Count % (FileLength+13) == 0)
-          {
-            Flag_WriteFile = SET;  // Set Flag_WriteFile to SET
-            Rev_Count = 0;         // Reset Rev_Count
-          }
-        }
+        //        Rev_Buffer[Rev_Count] = RcvIn;   TBD
+//        Rev_Count ++;
+//        
+//        /* this line is missing from here 
+//        if((Rev_Count % FOTA_PKT)==0)Flag_WriteFile = SET;
+//        */
+//        
+//        /*-------------TBD---------------*/
+//        if (FileLength > FOTA_PKT)
+//        {
+//          if(Flag_NextEndOfSector)
+//          {
+//            if(Rev_Count % (FOTA_PKT+59) == 0)
+//            {
+//              Flag_NextEndOfSector = RESET;
+//              Flag_WriteFile = SET;  // Set Flag_WriteFile to SET
+//              Rev_Count = 0;         // Reset Rev_Count
+//            }
+//          }
+//          else if ((!Flag_NextEndOfSector) &&(FileLoc < FOTA_PKT) && (!Flag_EndofSector))
+//          {
+//            if (Rev_Count % (FOTA_PKT+57) == 0)  //
+//            {   
+//              Flag_EndofSector = RESET;
+//              Flag_WriteFile = SET;  // Set Flag_WriteFile to SET
+//              Rev_Count = 0;         // Reset Rev_Count
+//            }
+//          }
+//          else if (!Flag_NextEndOfSector && Flag_EndofSector)
+//          {
+//            if (Rev_Count % (FOTA_PKT+87) == 0)  //
+//            {   
+//              Flag_EndofSector = RESET;
+//              Flag_WriteFile = SET;  // Set Flag_WriteFile to SET
+//              Rev_Count = 0;         // Reset Rev_Count
+//            }
+//          }
+//          else
+//          {
+//            if (Rev_Count % (FOTA_PKT+42) == 0) //
+//            {
+//              Flag_WriteFile = SET;  // Set Flag_WriteFile to SET
+//              Rev_Count = 0;         // Reset Rev_Count
+//            }
+//          }
+//        } 
+//        else
+//        {
+//          if (Rev_Count % (FileLength+13) == 0)
+//          {
+//            Flag_WriteFile = SET;  // Set Flag_WriteFile to SET
+//            Rev_Count = 0;         // Reset Rev_Count
+//          }
+//        }
         /*----------------------------------------------*/  
       }
       else

@@ -781,7 +781,7 @@ void Set_APN(void)
   
   memset(GPRS_Buffer,0,50);GPRS_Count = 0;
                                                                   /* 604 :- unspecified error*/
-  if(Flag_ModemOK == SET){ memset(GPRS_Buffer,0,50);GPRS_Count = 0; Modem_PutString("AT+QSPN");WAIT_MODEM_RESP(2);}
+  if(Flag_ModemOK == SET){ memset(GPRS_Buffer,0,50);GPRS_Count = 0;Modem_PutString("AT+QSPN?");WAIT_MODEM_RESP(2);}
  
   if(Ptr = strstr((char*)GPRS_Buffer,"PN:")) 
   {

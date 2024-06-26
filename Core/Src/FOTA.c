@@ -19,7 +19,7 @@ __IO uint32_t MemoryProgramStatus = 0;
 __IO uint32_t data32 = 0;
 
 /*Variable used for Erase procedure*/
-static FLASH_EraseInitTypeDef EraseInitStruct; 
+//static FLASH_EraseInitTypeDef EraseInitStruct; 
 //static uint32_t GetPage(uint32_t Address); 
 //static uint32_t GetBank(uint32_t Address); 
 
@@ -127,350 +127,162 @@ void mSec_Delay(unsigned int nTime)
 *******************************************************************************/
 void Get_Firmware(void)
 {
-  char* Ptr=NULL;
-  char  buff[200];
-    /*----- CHECK SIGNALS & NETWORK --------------------------------------------*/
+  char* PTR;
+   char *Ptr;
+  /*----- CHECK SIGNALS & NETWORK --------------------------------------------*/
   Check_Signal_Nw_GPRS();                                                       // CHECK SIGNAL STRENGTH NETWORK REGISTRATION GPRS ATTACHMENT 
   Get_CSQ++;
-  if(Get_CSQ > 31)SYSTEM_SW_RESET;
+  if(Get_CSQ > 99)SYSTEM_SW_RESET;
   if(Flag_ValidNetwork == SET && Flag_APNSet == RESET){Get_CSQ = 0; Set_APN();}               // IF NETWORK VALID SET APN
   
-  if(Flag_APNSet )
+  if(Flag_APNSet)
   {
-    
-      Serial_PutString_GPRS("AT+QHTTPURL=");                                    // AT+OHTTPURL - set URL address
-      memset(buff,0,100);
-     // if(DFU_HTTP.URL[0] != 'h')
-     if((DFU_HTTP.IP[0] != 0)&& (DFU_HTTP.PATH[0] != 0) && (DFU_HTTP.FILENAME[0] != 0))
-       sprintf(DFU_HTTP.URL,"http://%s/%s/%s.bin",DFU_HTTP.IP,DFU_HTTP.PATH,DFU_HTTP.FILENAME);
-      else
-      {
-        IAP_Counter++;
-        //Send_SMS(WRONG_URL);tbd
-        
-        LL_RTC_BAK_SetRegister(RTC,LL_RTC_BKP_DR2,IAP_Counter);
-        SYSTEM_SW_RESET;
-      }
-      
-      memset(buff,0,sizeof(buff)); 
-      
-     sprintf(buff,"%d,10",strlen(DFU_HTTP.URL));
-      Serial_PutString_GPRS(buff);                                               // URL address data length
-      Serial_SendData_GPRS(13); Serial_SendData_GPRS(10);                        // Address upload time
-      //Wait_For_Resp();     tbd      
-
-      Serial_PutString_GPRS(DFU_HTTP.URL);                                       // Send URL Address
-     
-      Serial_SendData_GPRS(13); Serial_SendData_GPRS(10);             
-      //Wait_For_Resp();  tbd
-      memset(Rev_Buffer,0,sizeof(Rev_Buffer));
-      while (Wait)
-      {
-        mSec_Delay(100);
-        if(Flag_Second){Flag_Second = RESET; /*LL_IWDG_ReloadCounter(IWDG); */  Wait--;}
-        if(Wait == 1){ Flag_APNSet = RESET; return;} // try again         
-        if(Ptr = strstr(GPRS_Buffer,"CONNECT"))
-        {
-           
-          Wait = 0;
-        }
-        else if(Ptr = strstr(GPRS_Buffer,"ERROR: "))
-          SYSTEM_SW_RESET;
-      }
- 
-      /*--------------------- Get File Request  ------------------------------------*/
-      Wait = 120;
-      Modem_PutString("AT+QHTTPGET=80");WAIT_MODEM_RESP(2); 
-      FileLength = 0;
+      char buff[50];
+//      Serial_PutString_GPRS("AT+QHTTPURL=");                                    // AT+OHTTPURL - set URL address
+//      memset(buff,0,100);
+//      if(DFU_HTTP.URL[0] != 'h')
+//        sprintf(DFU_HTTP.URL,"http://%s/%s/%s.bin",DFU_HTTP.IP ,&DFU_HTTP.PATH[0],&DFU_HTTP.FILENAME[0]);
+//    
+//      sprintf(buff,"%d,20",strlen(DFU_HTTP.URL));
+//      Serial_PutString_GPRS(buff);                                              // URL address data length
+//      Serial_SendData_GPRS(13); Serial_SendData_GPRS(10);                                                 // Address upload time
+//      WAIT_MODEM_CONNECT();        
+//      
+//      
+//      // PUT URL & Wait for connect
+//      Modem_PutString(DFU_HTTP.URL);
+//      WAIT_MODEM_RESP(2);     
+//      
+//      
+//      // Get Request
+//      /*        3827 :-   wait http response timeout*/
+//      Modem_PutString("AT+QHTTPGET=80");
+//
+//     Wait = 125 ;
+//      while(Wait)
+//      {
+//        mSec_Delay(100);
+//        if(Flag_Second){/*IWDG_ReloadCounter();*/ Flag_Second = RESET; Wait--;}
+//        if(Wait == 1){ Flag_APNSet = RESET;} // try again         
+//        
+//        if(strstr(GPRS_Buffer,"OK"))
+//        {
+//          Wait = 0;
+//        } 
+//        
+//          else if(strstr(GPRS_Buffer,"ROR: ")) 
+//        {
+//         SYSTEM_SW_RESET; 
+//        }
+//      
+//      }
+//
+//      
+//      // Read in File
+//      Modem_PutString("AT+QHTTPDL=\"FOTA.txt\",1024");WAIT_MODEM_RESP(2);
+//      Wait = 80;
+//      while(Wait)
+//      {
+//             mSec_Delay(100);
+//         if(Flag_Second){Flag_Second = RESET; /*LL_IWDG_ReloadCounter(IWDG);*/Wait--;}
+//         if(Wait == 1){ Flag_APNSet = RESET;  } // try again
+//         
+//         /*extracting file length*/
+//         if(Ptr = strstr(GPRS_Buffer,"PDL:"))
+//          {
+//            //Flag_Download_Status = SET;
+//            Ptr += 5;
+//            Ptr = strtok(Ptr, ",");
+//            Ptr = strtok(NULL, ",");
+//            FileLength = atoi(Ptr);
+//            if(FileLength){Wait = 0;}
+//          }
+//         /*error*/
+//         else if(strstr(GPRS_Buffer,"ROR:"))
+//           SYSTEM_SW_RESET;
+//      }
+//      
+       // Open File
+      FileLength = 9313;  // for testing TBD
+      int FileHandel = 0;Wait = 80;
+      Modem_PutString("AT+QFOPEN=\"FOTA.txt\",2");WAIT_MODEM_RESP(2); // Open in Readonly mode
       while(Wait)
       {
         mSec_Delay(100);
-        if(Flag_Second){Flag_Second = RESET; /*LL_IWDG_ReloadCounter(IWDG);*/   Wait--;}
-        if(Wait == 1){ Flag_APNSet = RESET; return;} // try again         
-        if(Ptr = strstr(GPRS_Buffer,"OK"))
-        {
-          Wait = 0;
-        } 
-        else if(strstr(GPRS_Buffer,"ROR: "))
-          SYSTEM_SW_RESET;
-      }
-      
-  
-      
-    /*----- GET FIRMWARE FILE URL ---------------------------------------------------*/
-       
-
-       /*--------------------- File Open in Readonly mode ------------------------*/
-        Wait = 200;
-       Modem_PutString("AT+QHTTPDL=\"FOTA.txt\",1024");WAIT_MODEM_RESP(5);
- 
-       while(Wait)
-       {
-         LL_mDelay(10);
-         if(Flag_Second){Flag_Second = RESET; /*LL_IWDG_ReloadCounter(IWDG);*/Wait--;}
-         if(Wait == 1){ Flag_APNSet = RESET; return;} // try again
-         if(Ptr = strstr(GPRS_Buffer,"PDL:"))
-          {
-            Flag_Download_Status = SET;
-            Ptr += 5;
-            Ptr = strtok(Ptr, ",");
-            Ptr = strtok(NULL, ",");
-            FileLength = atoi(Ptr);
-            Wait = 0;
-          }
-         else if(strstr(GPRS_Buffer,"ROR:"))
-           SYSTEM_SW_RESET;
-       }
-        
-       
-       uint32_t FileHandel = 0;
-       Wait = 80;
-      
-      Modem_PutString("AT+QFOPEN=\"FOTA.txt\",2");WAIT_MODEM_RESP(5); // Open in Readonly mode
-      while(Wait)
-      {
-        mSec_Delay(100);
-        if(Flag_Second){Flag_Second = RESET;  Wait--;}
-        if(Wait == 1){ Flag_APNSet = RESET; return;} // try again
+        if(Flag_Second){Flag_Second = RESET;/*IWDG_ReloadCounter();*/ Wait--;}
+        if(Wait == 1){ Flag_APNSet = RESET; } // try again
         if(Ptr = strstr(GPRS_Buffer,"OPEN: "))
         {
           Ptr += 6;
           Wait = 0;
           FileHandel = atoi(Ptr);
-          Flag_Download_Status  = RESET;
-          Flag_SaveFlash = SET;
         }
-        else if(Ptr = strstr(GPRS_Buffer,"ERROR: "))
-          SYSTEM_SW_RESET;
-      } 
-       
-       /*---------------------- Start Downloading in Flash ---------------------*/
-       FlashAddress        = FOTA_IMG_ADDR;
-       long StartFotaAddr  = FOTA_IMG_ADDR;
-       Write_Loc = 0;
-       unsigned char Calc_ChkSum = 0, CheckSum = 0;
-       uint32_t FlashCodeAddr = 0;
-       uint16_t GP_Counter = 0;
-       unsigned char No_OfBytes = 0, RecordType = 0;
-       Modem_NoResp = 0;
-       Flag_Download = SET;
-       //Flag_DataError = SET;
-       /*--------------------- Erase Flash -------------------------------------*/
-       if (FlashAddress != 0x00000000)
-       {
-
-         HAL_FLASH_Unlock();            
-
-
-//        __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_OPTVERR);
-         
-         /* clear all error flags*/
-         __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP);
-         __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_WRPERR);
-         __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_PGERR);
-         
-         /*taking first page of flash */   //TBD
-//        FirstPage = GetPage(FlashAddress);
-        
-        /* taking number of pages*/
-//        NbOfPages = GetPage(End_Address) - FirstPage;
-        
-//        BankNumber = GetBank(FlashAddress);
-
-        EraseInitStruct.TypeErase   = FLASH_TYPEERASE_PAGES;
-        //EraseInitStruct.Banks       = BankNumber;
-        EraseInitStruct.PageAddress        = FirstPage;
-        EraseInitStruct.NbPages     = NbOfPages;
-
-
-        if (HAL_FLASHEx_Erase(&EraseInitStruct, &PageError) != HAL_OK) Error_Handler();
-
-        FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
-         
       }
       
-      mSec_Delay(100);
-      /*------------------- Read Data from Modem ----------------*/
-     // FileLength = 131597;
-     // FileHandel = 19202049;
+      // Start Download in SPI
+      FlashAddress = SPIFLASH_DATA;Write_Loc = 0;
+      Flag_ModemError = RESET;Modem_NoResp = 0;
+      Flag_Download = SET;
       while(FileLength)
-       {
-         sprintf(buff,"AT+QFSEEK=%d,%d,0",FileHandel,FileLoc);
-         Modem_PutString(buff);WAIT_MODEM_RESP(5);                      // Open in Readonly mode
-         
-         int read_length = FOTA_PKT;  // Default read length
-         
-         if (FileLoc < FOTA_PKT) { read_length += 40; FileLoc += 40; FileLength -= 40;}
-         
-         else if (Flag_NextEndOfSector) {  read_length += 42; FileLoc += 42; FileLength -= 42;}
-         
-         else if (Flag_EndofSector) {  read_length += 70; FileLoc += 70; FileLength -= 70;}
-         
-         else if (FileLength < FOTA_PKT) read_length = FileLength;
-         
-         else { read_length += 25; FileLoc += 25; FileLength -= 25;}
-         
-         sprintf(buff, "AT+QFREAD=%d,%d", FileHandel, read_length);  // Read File
+      {
+        sprintf(buff,"AT+QFSEEK=%d,%d,0",FileHandel,FileLoc);
+        Modem_PutString(buff);WAIT_MODEM_RESP(2); // Open in Readonly mode
         
-         
-         Modem_PutString(buff);
-         
-         Flag_GetFile          = SET;
-         Flag_WriteFile        = RESET;
-         Data_WaitTime         = 30; 
-         Flag_LoadProg         = SET;
-         Flag_SaveFlash        = RESET;
-         Flag_Download_Status  = RESET;
-         Rev_Count = 0;
-         while(Data_WaitTime > 0)
-         {
-           if(Flag_Second){Flag_Second = RESET;  Data_WaitTime--;}
-           if(Flag_WriteFile)
-           {
-             Data_WaitTime = 0;
-             Flag_GetFile = RESET;
-            if(StrPtr = strstr(Rev_Buffer,"CONNECT"))
-             {
-               StrPtr += 8;
-               //Coneect_FileLen = atoi(StrPtr);
-               StrPtr = strstr(StrPtr,":");
-             }
-             else if(strstr(GPRS_Buffer,"ROR: 400"))SYSTEM_SW_RESET;
-             else StrPtr = NULL;
-             
-//             if(Flash_Write_Size >= FLASH_PAGE_SIZE)   // ERASE SECTOR IN FLASH
-//             {
-//               Flash_Write_Size = 0;
-//               FLASH_Erase(FlashAddress);
-//             }
-             
-             memset(Program_Dbuff,0,sizeof(Program_Dbuff)); // CLEAR BUFFER
-           NEXT:
-             while ((*StrPtr != NULL) && Write_Loc < FLASH_PAGE_SIZE) 
-             { 
-               mSec_Delay(100);
-               /*------- Start Code  with `:` ----------------------------------------------*/
-               StrPtr = strstr(StrPtr,":");
-               if (StrPtr != NULL) 
-               {
-                 for (GP_Counter = 0; GP_Counter < (IntelHexDataSize * 2) && *StrPtr != '\0'; GP_Counter++, StrPtr++) 
-                 {
-                   if (*StrPtr == RECORD_MARK) { StrPtr++; GP_Counter = 0; Flag_DataError = RESET; break;}
-                 }
-               }
-               else 
-                 DataErr();
-               
-               /*------- CHECK DATA ERROR ---------------------------------------------------*/
-               if(GP_Counter == (IntelHexDataSize*2)) 
-               {
-                 Flag_DataError = SET;
-                 DataErr();
-               }
-               
-               /*-------- FIRST BYTE : NUMBER OF BYTES --------------------------------------*/
-               if (StrPtr != NULL) No_OfBytes = CONVERTHEX(*StrPtr) *16 + CONVERTHEX(*(StrPtr+1));StrPtr += 2;	
-                Calc_ChkSum = No_OfBytes;
-               
-               /*-------- BYTE 2+3 : CodeADDR -----------------------------------------------*/
-              if (StrPtr != NULL) FlashCodeAddr = (CONVERTHEX(*StrPtr) * 4096) + (CONVERTHEX(*(StrPtr+1)) * 256) + (CONVERTHEX(*(StrPtr+2)) * 16) + CONVERTHEX(*(StrPtr+3));StrPtr += 4;
-               Calc_ChkSum += FlashCodeAddr;
-               
-               Check_FOTA_CodeAddr = StartFotaAddr + FlashCodeAddr;
-               
-               // if((FlashCodeAddr) != (FlashAddress - Check_FOTA_CodeAddr)) {Flag_DataError = SET; DataErr();}
-               
-               /*------- 4th BYTE : RECORD TYPE ---------------------------------------------*/
-              if (StrPtr != NULL) RecordType = CONVERTHEX(*StrPtr) *16 + CONVERTHEX(*(StrPtr+1));StrPtr +=2;	   
-               Calc_ChkSum += RecordType;
-               
-               /*----- CHECK HEX STATRTING --------------------------------------------------*/
-               if((RecordType == 0x04) && (No_OfBytes == 0x02))
-               {
-                if (StrPtr != NULL) Check_FOTA_CodeAddr = (CONVERTHEX(*StrPtr) * 4096) + (CONVERTHEX(*(StrPtr+1)) * 256) + (CONVERTHEX(*(StrPtr+2)) * 16) + CONVERTHEX(*(StrPtr+3));StrPtr += 4;
-                 Check_FOTA_CodeAddr *= 0x10000;
-                 
-                 //if(Check_FOTA_CodeAddr == FLASH_FOTA_IMG_ADDR )
-                   Flag_FOTA_FILE_Addr = SET;
-                 
-                 goto NEXT;
-               } 
-               
-               /*----- END OF SECTOR --------------------------------------------------------*/
-               if((FlashCodeAddr == 0xFFF0) &&(RecordType == 0x00)) Flag_EndofSector = SET;
-               else if((FlashCodeAddr == 0xFE00) &&(RecordType == 0x00)) 
-                 Flag_NextEndOfSector = SET;
-               
-               /*----- END OF FILE ----------------------------------------------------------*/
-               if((RecordType == 0x01) && (No_OfBytes == 0x00) && (FlashCodeAddr == 0x0000))
-               {
-                 Flag_EndofFile = SET; break;
-               }
-               
-               /*----- DATA BYTES -----------------------------------------------------------*/
-               if((RecordType == 0x00) && No_OfBytes && !Flag_DataError && Flag_FOTA_FILE_Addr)
-               {
-                 memcpy(Hex_Deta, StrPtr, 2*No_OfBytes);
-                 StrPtr += 2*No_OfBytes;
-                 char* HexPtr = charToHex(Hex_Deta);
-                 
-                 for(GP_Counter = 0; GP_Counter < No_OfBytes; GP_Counter++)
-                   Program_Dbuff[Write_Loc++] = HexPtr[GP_Counter];
-                 
-                 memset(Hex_Deta,0, sizeof(Hex_Deta));
-                 free(HexPtr);  // = &test;    // Free Memory
-               }
-               
-               /*----- CHECKSUM -----------------------------------------------------------*/
-               CheckSum = CONVERTHEX(*StrPtr) *16 + CONVERTHEX(*(StrPtr+1));StrPtr += 2;
-               
-               /*----- CALCULATE CHECKSUM -------------------------------------------------*/
-               Calc_ChkSum = 0x100 - Calc_ChkSum;
-             }
-             
-             if ((Program_Dbuff != NULL) && (Write_Loc != NULL)) 
-             {
-               //HAL_FLASH_Write_Buff(FlashAddress, Program_Dbuff, Write_Loc); tbd
-             }
-             else 
-               DataErr();
-             
-             Flag_HTTP_Content = RESET;
-             Flag_WriteFile = RESET;
-             Flash_Write_Size   += Write_Loc;   // WRITE SIZE IN FLASH
-             FlashAddress       += Write_Loc;
-             Check_FOTA_CodeAddr = Write_Loc;
-             Data_WaitTime       = 0; 
-             Write_Loc           = 0;
-             FileLoc            += FOTA_PKT;            // FILE LOCATION IN MODEM
-             if(FileLength > FOTA_PKT)FileLength         -= FOTA_PKT;
-             else FileLength = 0;
-             memset(Rev_Buffer,0,sizeof(Rev_Buffer));
-           }
-         }
-         if(Flag_EndofFile)break;  //(FileLoc >= FileLength)&&
-       }
+        if(FileLength > FOTA_PKT)
+        {
+          sprintf(buff,"AT+QFREAD=%d,%d",FileHandel, FOTA_PKT);
+          Modem_PutString(buff);
+        }
+        else
+        {
+          sprintf(buff,"AT+QFREAD=%d,%d",FileHandel,FileLength);
+          Modem_PutString(buff);
+        } 
+        
+        /*Flag_GetFile_Serial = RESET;*/ //TBD
+        Flag_WriteFile = RESET;
+        
+        Data_WaitTime = 30; 
+        Flag_GetFile = SET;
+        while(Data_WaitTime > 0)
+        {
+          if(Flag_Second){Flag_Second = RESET; Data_WaitTime--;}
+          if(Flag_WriteFile || strstr(Rev_Buffer,":00000001FF"))
+          {
+            
+            mSec_Delay(50);
+            PTR = strstr(&Rev_Buffer[0],"CONNECT");
+            PTR = strstr(PTR,"\r\n") + 2;
+            
+            Flag_WriteFile = RESET;
+            
+            SPI_FLASH_SectorErase(FlashAddress);
+            SPI_FLASH_SectorErase(FlashAddress + 4096);
+            SPI_FLASH_BufferWrite(PTR,FlashAddress,8192);
+            Rev_Count = 0;
+            if(FileLength < 8192 && strstr(Rev_Buffer,":00000001FF"))
+            {
+              mSec_Delay(50);
+              StoreSPI_Flash();
+              if(Flag_LoadProg)Program_Flash();
+              Flag_GetFile = RESET;
+              return;
+            }
+            else FileLength -= 8192;
+            Data_WaitTime = 0;
+            FileLoc += 8192;  FlashAddress += 8192; 
+            memset(Rev_Buffer,0,8192);
+          }
+        }
        
-       /*--------------------- Flash Lock -------------------------------------*/
-        //HAL_FLASH_Lock();  tbd
-       
-       if (!Flag_DataError)
-       {
-         
- 
-          
-          
-        LL_RTC_BAK_SetRegister(RTC, LL_RTC_BKP_DR3, 'P');
-        LL_RTC_BAK_SetRegister(RTC, LL_RTC_BKP_DR1, 'F');
-         //FLASH_Erase(GOLDEN_OR_FOTA_IMG_ADD);
-        // Send_SMS(SUCCESS); TBD
-         Flag_FlashProg = RESET;
-       }
-       
-       //CPU_ResetTime = 2;tbd
-
-  }
+      }
+      
+      
+    }// APN SET
 }
+
+
+
 /*******************************************************************************
 * Function Name  : Program_Flash
 * Description    : Prepare the flash for new Program
@@ -628,3 +440,275 @@ char* charToHex(char* input)
 //}
 
 /******************* (C) COPYRIGHT 2023 EDS INDIA ********* END OF FILE *********/
+
+
+
+/*******************************************************************************
+* Function Name  : StoreSPI_Flash
+* Description    : Store download data in SPI flash
+* Input          : None
+* Output         : None
+* Return         : None
+*******************************************************************************/
+void StoreSPI_Flash(void)
+{
+  Flag_Download = RESET;
+  Flag_LoadProg = RESET;
+  Flag_SaveFlash = SET;
+  uint16_t
+  Current_Add = 0, Last_Add = 0;
+  unsigned char Calc_ChkSum = 0;
+  unsigned char No_OfBytes = 0,Record,CheckSum = 0;
+  char Byt_Count[4];
+  FlagStatus
+  Flag_DataError = RESET,
+  Flag_Prog = SET;
+  char *StrPtr;
+  StrPtr = NULL;
+ 
+  NOLs = 0;
+ 
+  SPIFlashAddress = SPIFLASH_DATA;
+  FlashAddress  = SPIFLASH_FOTA;
+  
+  for(GP_Counter = 0; GP_Counter < 64 ; GP_Counter++,FlashAddress +=4096){SPI_FLASH_SectorErase(FlashAddress); mSec_Delay(10);} // 256 KB
+ 
+  
+  
+  Current_Add = 0x0000;
+  Last_Add    = 0xFFFF;
+NEXT:  
+  while(Flag_Prog)
+  {
+  memset(GPRS_SendBuffer,0,100);
+  SPI_FLASH_BufferRead(Byt_Count,SPIFlashAddress,4);
+  if(StrPtr = strstr(Byt_Count,":"))StrPtr +=1;
+  No_OfBytes = CONVERTHEX(*StrPtr) *16 + CONVERTHEX(*(StrPtr+1));
+  SPI_FLASH_BufferRead(GPRS_SendBuffer,SPIFlashAddress,(13+ 2*No_OfBytes));
+  StrPtr = GPRS_SendBuffer;
+ 
+    
+   for(GP_Counter = 0; GP_Counter < 30; GP_Counter++,StrPtr++)
+     if(*StrPtr == ':'){StrPtr += 1; break;}
+   
+   if(GP_Counter == 30){Flag_DataError = SET;};    
+       
+   if(StrPtr)
+   {
+   /*----- NUMBER OF BYTES ---------------------------------------------------*/
+   No_OfBytes = CONVERTHEX(*StrPtr) *16 + CONVERTHEX(*(StrPtr+1));StrPtr += 2;
+   Calc_ChkSum = No_OfBytes;
+  
+   /*----- FLASH ADDRESS CHECKSUM --------------------------------------------*/
+   FlashAddress = CONVERTHEX(*StrPtr) *16 + CONVERTHEX(*(StrPtr+1));StrPtr += 2;
+   Calc_ChkSum += FlashAddress;
+   FlashAddress = CONVERTHEX(*StrPtr) *16 + CONVERTHEX(*(StrPtr+1));StrPtr += 2;
+   Calc_ChkSum += FlashAddress;StrPtr -= 4;
+ 
+   
+   
+   /*----- FLASH ADDRESS FOR WRITTING ----------------------------------------*/   
+   Current_Add = (CONVERTHEX(*StrPtr) * 4096) + (CONVERTHEX(*(StrPtr+1)) * 256) + (CONVERTHEX(*(StrPtr+2)) * 16) + CONVERTHEX(*(StrPtr+3));
+   //FlashAddress = SPIFLASH_FOTA + StartAddress + (CONVERTHEX(*StrPtr) * 4096) + (CONVERTHEX(*(StrPtr+1)) * 256) + (CONVERTHEX(*(StrPtr+2)) * 16) + CONVERTHEX(*(StrPtr+3));
+   FlashAddress = SPIFLASH_FOTA + StartAddress + Current_Add;
+   //FlashAddress -= 0x5000;                                                      // application start address in program is 0x4C00;
+   FlashAddress  -= (ApplicationAddress - 0x08000000);
+   StrPtr+=4;
+    
+   /*----- RECORD TYPE -------------------------------------------------------*/
+   Record = CONVERTHEX(*StrPtr) *16 + CONVERTHEX(*(StrPtr+1));StrPtr +=2;
+   Calc_ChkSum += Record;
+  
+   if(Record == 0x04)
+     {
+      FlashAddress = CONVERTHEX(*StrPtr) * 16 + CONVERTHEX(*(StrPtr+1));
+      StartAddress =  FlashAddress * 0x1000;StrPtr += 2;
+      FlashAddress = CONVERTHEX(*StrPtr) * 16 + CONVERTHEX(*(StrPtr+1));
+      FlashAddress *= 0x10;
+      StartAddress +=  FlashAddress;
+      StartAddress *= 0x1000;
+      StartAddress -= 0x08000000;
+      
+      SPIFlashAddress += (13 + (2*No_OfBytes));
+      goto NEXT;
+      };
+   
+   /*----- DATA BYTES --------------------------------------------------------*/
+   for(GP_Counter = 0; GP_Counter < No_OfBytes;GP_Counter++)
+    {
+     Program_Byte[GP_Counter] = CONVERTHEX(*StrPtr) *16 + CONVERTHEX(*(StrPtr+1)) ; 
+     StrPtr += 2;
+     Calc_ChkSum += Program_Byte[GP_Counter];
+    }
+   
+   /*----- CHECKSUM ----------------------------------------------------------*/
+   CheckSum = CONVERTHEX(*StrPtr) *16 + CONVERTHEX(*(StrPtr+1));StrPtr +=2;
+   
+   /*----- CALCULATE CHECKSUM ------------------------------------------------*/
+   Calc_ChkSum = 0x100 - Calc_ChkSum;
+   if(Record == 0x00)                                                           // DATA VALUE
+    {
+       if(Calc_ChkSum == CheckSum)
+       { SPI_FLASH_BufferWrite((char*)Program_Byte,FlashAddress,No_OfBytes); NOLs++;}
+       else {Flag_Prog = RESET;Flag_DataError = SET;}
+      };
+     
+     
+     // CHECK ADDRESS DIFFERENCE == 16 BYTE
+     if(Record == 0x00)
+     {
+     if(Last_Add == 0xFFFF)
+     {
+       if(Current_Add == (ApplicationAddress - 0x08000000))
+       {
+         Last_Add = Current_Add;
+       }
+       else 
+       {
+         DataErr();
+       }
+     }
+     else 
+     {
+       if(Last_Add == 0xFFF0)
+       {
+         if(Current_Add != 0)
+         {
+           DataErr();
+         }
+         else 
+         {
+           Last_Add = Current_Add;
+         }
+       }
+       else 
+       {
+         if((Current_Add - Last_Add) == 0x10)
+         {
+           Last_Add = Current_Add;
+         }
+         else 
+         {
+           DataErr();           
+           
+         }
+       }
+     }
+   }
+   
+  }; // END OF StrPtr
+   
+   if(*StrPtr == 0x0D)
+    {
+     if(No_OfBytes == 0 && CheckSum == 0xFF && Record == 0x01)
+     {
+       Flag_Prog = RESET;Flag_SaveFlash = RESET;Flag_LoadProg = SET;
+
+       GP_Counter = IAP_Counter << 8 | 'D'; 
+        LL_RTC_BAK_SetRegister(RTC,LL_RTC_BKP_DR4,GP_Counter); 
+       
+     } 
+     // VTS PROGRAM DATA HAVE BEEN EXTRACTED 
+     else {Flag_Prog = SET;SPIFlashAddress += (13 + (2*No_OfBytes));}
+    }
+   else {Flag_Prog = RESET;Flag_DataError = SET;}
+   
+   if(Flag_Second == SET){ Flag_Second = RESET; }
+  }
+     
+ mSec_Delay(50);
+ if(Flag_DataError)
+ {
+   if(IAP_Status != 'S')
+   {
+     Send_SMS(ERROR);GP_Counter = IAP_Counter << 8 | 'E'; LL_RTC_BAK_SetRegister(RTC,LL_RTC_BKP_DR4,GP_Counter); 
+   }
+   else 
+   { 
+     GP_Counter = 255 << 8 | 'E';
+      LL_RTC_BAK_SetRegister(RTC,LL_RTC_BKP_DR4,GP_Counter); 
+   }
+   SYSTEM_SW_RESET;
+ }
+}
+
+
+/*******************************************************************************
+* Function Name  : Program_Flash
+* Description    : Prepare the flash for new Program
+* Input          : None
+* Output         : None
+* Return         : None
+*******************************************************************************/
+void Program_Flash(void)
+{
+  Flag_Download = RESET;
+  Flag_SaveFlash = RESET;
+  Flag_LoadProg = SET;
+  
+//  volatile status FLASHStatus;
+  unsigned short FlashData;
+  short Prog_Loc;
+  char Prog_Data[2048];
+  
+  /* Unlock the Flash Program Erase controller */
+  HAL_FLASH_Unlock();								// UNLOCK FLASH
+
+  /* Erase the FLASH pages */
+  for(FlashAddress = ApplicationAddress;FlashAddress <(EndAddr-(FLASH_PAGE_SIZE *2));FlashAddress += FLASH_PAGE_SIZE)
+  {
+    if(Flag_Second == SET){Flag_Second = RESET;  /*IWDG_ReloadCounter();*/}
+     FLASH_PageErase(FlashAddress);				// ERASE FLASH PAGE
+  }
+  WrnData = 0;
+  FlashAddress = ApplicationAddress;
+  SPIFlashAddress = SPIFLASH_FOTA;
+  
+  for(GP_Counter = 0;GP_Counter < (EndAddr-ApplicationAddress-(FLASH_PAGE_SIZE*2))/FLASH_PAGE_SIZE; GP_Counter++)                            // UPTO CONFIGURATION LOCATION 
+   {
+      SPI_FLASH_BufferRead((char*)Prog_Data,SPIFlashAddress,FLASH_PAGE_SIZE);
+      for(Prog_Loc = 0; Prog_Loc < FLASH_PAGE_SIZE; Prog_Loc++)
+       {
+        FlashData =   (Prog_Data[Prog_Loc+1]<<8) | Prog_Data[Prog_Loc];		// GET RAM DATA           
+        FLASH_Program_HalfWord(FlashAddress, FlashData);
+        FlashAddress += 2;Prog_Loc ++; 
+        WrnData++;
+        if(WrnData >= (NOLs*8))break;
+       };
+   
+      SPIFlashAddress += FLASH_PAGE_SIZE;
+     /* IWDG_ReloadCounter();*/
+    
+    if(WrnData >= (NOLs*8))break;
+   };
+
+  HAL_FLASH_Lock();
+   
+  IAP_Status = 'P';
+  LL_RTC_BAK_SetRegister(RTC,LL_RTC_BKP_DR4,IAP_Status);
+  mSec_Delay(1000);
+  
+  
+  Save_Record_Try = 0;
+//  if(Flag_SerialFlash == SET)
+//  {
+//    Serial_PutString_232("SUCCEED OK",3);
+//  }
+//  
+  
+  HAL_FLASH_Unlock();
+  HAL_FLASH_OB_Unlock();
+  HAL_FLASHEx_OBErase();
+  FLASH_OB_RDP_LevelConfig(OB_RDP_LEVEL_1);
+  /* Enable the pages write protection */
+  FLASH_OB_EnableWRP(OB_WRP1_WRP1|OB_WRP2_WRP2|OB_WRP3_WRP3);
+  HAL_FLASH_OB_Lock();
+  HAL_FLASH_Lock(); 
+
+  HAL_FLASH_OB_Launch();
+  
+ 
+  SYSTEM_SW_RESET;
+ 
+}
+

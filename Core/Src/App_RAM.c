@@ -50,4 +50,4 @@ SPIFlashAddress;                                                                
 uint32_t JumpAddress;                                                           // JUMP TO VTS PROGRAM
 uint16_t Config_Counter = 0;
 
-uint8_t respond_time = 0,Config_State = 0 ,EC200_ONTime = 25,GPRS_ModemErr =0  ;
+uint8_t respond_time = 0,Config_State = 0 ,EC200_ONTime = 15,GPRS_ModemErr =0  ;
