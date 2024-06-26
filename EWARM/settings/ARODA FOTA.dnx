@@ -18,14 +18,14 @@
     <StLinkDriver>
         <stlinkserialNo>0D18170029135147324D4E00</stlinkserialNo>
         <stlinkfoundProbes />
-        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
-        <CStepIntDis>_ 0</CStepIntDis>
         <stlinkResetStyle>0</stlinkResetStyle>
         <stlinkResetStrategy>2</stlinkResetStrategy>
+        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
+        <CStepIntDis>_ 0</CStepIntDis>
     </StLinkDriver>
     <ArmDriver>
-        <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
         <EnableCache>0</EnableCache>
+        <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
     </ArmDriver>
     <Trace1>
         <Enabled>0</Enabled>
@@ -75,9 +75,7 @@
         <Bp0>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\Core\Src\FOTA.c}.664.3" 0 0 1 "" 0 "" 0</Bp0>
         <Bp1>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\Core\Src\FOTA.c}.274.15" 0 0 1 "" 0 "" 0</Bp1>
         <Bp2>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\Core\Src\FOTA.c}.259.13" 0 0 1 "" 0 "" 0</Bp2>
-        <Bp3>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\Core\Src\FOTA.c}.491.4" 0 0 1 "" 0 "" 0</Bp3>
-        <Bp4>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\Core\Src\FOTA.c}.487.3" 0 0 1 "" 0 "" 0</Bp4>
-        <Count>5</Count>
+        <Count>3</Count>
     </Breakpoints2>
     <Aliases>
         <Count>0</Count>

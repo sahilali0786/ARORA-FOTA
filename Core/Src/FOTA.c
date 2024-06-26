@@ -138,70 +138,70 @@ void Get_Firmware(void)
   if(Flag_APNSet)
   {
       char buff[50];
-//      Serial_PutString_GPRS("AT+QHTTPURL=");                                    // AT+OHTTPURL - set URL address
-//      memset(buff,0,100);
-//      if(DFU_HTTP.URL[0] != 'h')
-//        sprintf(DFU_HTTP.URL,"http://%s/%s/%s.bin",DFU_HTTP.IP ,&DFU_HTTP.PATH[0],&DFU_HTTP.FILENAME[0]);
-//    
-//      sprintf(buff,"%d,20",strlen(DFU_HTTP.URL));
-//      Serial_PutString_GPRS(buff);                                              // URL address data length
-//      Serial_SendData_GPRS(13); Serial_SendData_GPRS(10);                                                 // Address upload time
-//      WAIT_MODEM_CONNECT();        
-//      
-//      
-//      // PUT URL & Wait for connect
-//      Modem_PutString(DFU_HTTP.URL);
-//      WAIT_MODEM_RESP(2);     
-//      
-//      
-//      // Get Request
-//      /*        3827 :-   wait http response timeout*/
-//      Modem_PutString("AT+QHTTPGET=80");
-//
-//     Wait = 125 ;
-//      while(Wait)
-//      {
-//        mSec_Delay(100);
-//        if(Flag_Second){/*IWDG_ReloadCounter();*/ Flag_Second = RESET; Wait--;}
-//        if(Wait == 1){ Flag_APNSet = RESET;} // try again         
-//        
-//        if(strstr(GPRS_Buffer,"OK"))
-//        {
-//          Wait = 0;
-//        } 
-//        
-//          else if(strstr(GPRS_Buffer,"ROR: ")) 
-//        {
-//         SYSTEM_SW_RESET; 
-//        }
-//      
-//      }
-//
-//      
-//      // Read in File
-//      Modem_PutString("AT+QHTTPDL=\"FOTA.txt\",1024");WAIT_MODEM_RESP(2);
-//      Wait = 80;
-//      while(Wait)
-//      {
-//             mSec_Delay(100);
-//         if(Flag_Second){Flag_Second = RESET; /*LL_IWDG_ReloadCounter(IWDG);*/Wait--;}
-//         if(Wait == 1){ Flag_APNSet = RESET;  } // try again
-//         
-//         /*extracting file length*/
-//         if(Ptr = strstr(GPRS_Buffer,"PDL:"))
-//          {
-//            //Flag_Download_Status = SET;
-//            Ptr += 5;
-//            Ptr = strtok(Ptr, ",");
-//            Ptr = strtok(NULL, ",");
-//            FileLength = atoi(Ptr);
-//            if(FileLength){Wait = 0;}
-//          }
-//         /*error*/
-//         else if(strstr(GPRS_Buffer,"ROR:"))
-//           SYSTEM_SW_RESET;
-//      }
-//      
+      Serial_PutString_GPRS("AT+QHTTPURL=");                                    // AT+OHTTPURL - set URL address
+      memset(buff,0,100);
+      if(DFU_HTTP.URL[0] != 'h')
+        sprintf(DFU_HTTP.URL,"http://%s/%s/%s.bin",DFU_HTTP.IP ,&DFU_HTTP.PATH[0],&DFU_HTTP.FILENAME[0]);
+    
+      sprintf(buff,"%d,20",strlen(DFU_HTTP.URL));
+      Serial_PutString_GPRS(buff);                                              // URL address data length
+      Serial_SendData_GPRS(13); Serial_SendData_GPRS(10);                                                 // Address upload time
+      WAIT_MODEM_CONNECT();        
+      
+      
+      // PUT URL & Wait for connect
+      Modem_PutString(DFU_HTTP.URL);
+      WAIT_MODEM_RESP(2);     
+      
+      
+      // Get Request
+      /*        3827 :-   wait http response timeout*/
+      Modem_PutString("AT+QHTTPGET=80");
+
+     Wait = 125 ;
+      while(Wait)
+      {
+        mSec_Delay(100);
+        if(Flag_Second){/*IWDG_ReloadCounter();*/ Flag_Second = RESET; Wait--;}
+        if(Wait == 1){ Flag_APNSet = RESET;} // try again         
+        
+        if(strstr(GPRS_Buffer,"OK"))
+        {
+          Wait = 0;
+        } 
+        
+          else if(strstr(GPRS_Buffer,"ROR: ")) 
+        {
+         SYSTEM_SW_RESET; 
+        }
+      
+      }
+
+      
+      // Read in File
+      Modem_PutString("AT+QHTTPDL=\"FOTA.txt\",1024");WAIT_MODEM_RESP(2);
+      Wait = 80;
+      while(Wait)
+      {
+             mSec_Delay(100);
+         if(Flag_Second){Flag_Second = RESET; /*LL_IWDG_ReloadCounter(IWDG);*/Wait--;}
+         if(Wait == 1){ Flag_APNSet = RESET;  } // try again
+         
+         /*extracting file length*/
+         if(Ptr = strstr(GPRS_Buffer,"PDL:"))
+          {
+            //Flag_Download_Status = SET;
+            Ptr += 5;
+            Ptr = strtok(Ptr, ",");
+            Ptr = strtok(NULL, ",");
+            FileLength = atoi(Ptr);
+            if(FileLength){Wait = 0;}
+          }
+         /*error*/
+         else if(strstr(GPRS_Buffer,"ROR:"))
+           SYSTEM_SW_RESET;
+      }
+      
        // Open File
       FileLength = 9313;  // for testing TBD
       int FileHandel = 0;Wait = 80;
